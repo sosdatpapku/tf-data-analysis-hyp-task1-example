@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
-from scipy.stats import ttest_ind
-from scipy.stats import t
+from statsmodels.stats.proportion import proportions_ztest
 
 
 chat_id = 1188007817 # Ваш chat ID, не меняйте название переменной
@@ -10,18 +9,16 @@ def solution(x_success: int,
              x_cnt: int, 
              y_success: int, 
              y_cnt: int) -> bool:
-  
-    mean_X = np.mean(x_success)
-    mean_Y = np.mean(y_success)
-    std_X = np.std(x_success, ddof=1)
-    std_Y = np.std(y_success, ddof=1)
+    prop_control = x_success / x_cnt
+    prop_test = y_success / y_cnt
 
-    t_stat, p_value = ttest_ind(x_success, y_success)
-    alpha = 0.04
-    df = x_cnt + y_cnt - 2
-    t_crit = abs(t.ppf(alpha/2, df))
+# Сравниваем доли продаж с помощью z-теста
+    count = [x_success, y_success]
+    nobs = [x_cnt, y_cnt]
+    stat, pval = proportions_ztest(count, nobs)
 
-    if (p_value < alpha/2) or (t_stat < -t_crit):
+# Проверяем значимость различий между группами
+    if pval < 0.04:
         return True
     else:
         return False
