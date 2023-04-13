@@ -15,7 +15,7 @@ def solution(x_success: int,
 # Сравниваем доли продаж с помощью z-теста
     count = [x_success, y_success]
     nobs = [x_cnt, y_cnt]
-    stat, pval = proportions_ztest(count, nobs)
+    stat, pval = proportions_ztest(count, nobs, alternative='smaller')
 
 # Проверяем значимость различий между группами
     if pval < 0.04:
